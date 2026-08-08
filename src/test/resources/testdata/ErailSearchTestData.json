@@ -1,0 +1,7 @@
+{
+  "testErailStationSearchUseCase": {
+    "searchText": "DEL",
+    "fourthStationPosition": 3,
+    "daysAhead": 30
+  }
+}

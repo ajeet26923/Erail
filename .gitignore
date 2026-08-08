@@ -1,0 +1,28 @@
+# Maven
+target/
+*.class
+*.jar
+*.war
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# Test output
+test-output/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp investigation files
+erail_page.html
+erail_all.js
+erail.css
+stations.js
+eRailText_en.js
