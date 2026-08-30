@@ -42,8 +42,14 @@ public final class DriverManager {
             case "chrome":
             default:
                 WebDriverManager.chromedriver().setup();
-                ChromeOptions options = new ChromeOptions();
+              ChromeOptions options = new ChromeOptions();                
+//                options.addArguments("--disable-notifications");
+//                options.addArguments("--deny-permission-prompts");
                 options.addArguments("--start-maximized");
+                options.addArguments("--headless=new");
+                options.addArguments("--no-sandbox");
+                options.addArguments("--disable-dev-shm-usage");
+                options.addArguments("--window-size=1920,1080");
                 options.addArguments("--disable-notifications");
                 options.addArguments("--deny-permission-prompts");
 
