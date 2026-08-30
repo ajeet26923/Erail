@@ -9,6 +9,7 @@ public class Demo {
 		System.out.println("JenkinePipelines trigered");
 		System.out.println("JenkinePipelines trigered");
 		System.out.println("JenkinePipelines trigered123");
+		System.out.println("JenkinePipelines trigered1234");
 	}
 
 }
