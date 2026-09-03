@@ -95,7 +95,7 @@ public class ErailSearchTest extends BaseTest {
 						expectedDate.format(DateTimeFormatter.ofPattern("dd-MMM-yy", Locale.ENGLISH)).toLowerCase()),
 				"Selected date should reflect " + daysAhead + " days from today. Expected around: " + expectedDateLabel
 						+ ", but was: " + selectedDate);
-		Assert.fail();
+		//Assert.fail();
 		extentTest.pass("Step 9: Test execution logged to Extent Report");
 	}
 }
