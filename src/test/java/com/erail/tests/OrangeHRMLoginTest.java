@@ -34,7 +34,7 @@ public class OrangeHRMLoginTest extends BaseTest {
         loginDataCache = LoginExcelUtils.readLoginData(loginDataFile);
     }
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun=true)
     public void openLoginPage() {
         loginPage = new LoginPage(driver);
         String loginUrl = ConfigReader.get("base.url");
