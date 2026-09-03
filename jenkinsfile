@@ -2,28 +2,65 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+
+        stage('Checkout Code') {
             steps {
-                git branch: 'master', url: 'https://github.com/ajeet26923/Erail.git'
+                checkout scm
             }
         }
 
-        stage('Build') {
+        stage('Run Selenium TestNG Automation') {
             steps {
-                sh 'mvn clean install'
+                script {
+                    catchError(
+                        buildResult: 'UNSTABLE',
+                        stageResult: 'FAILURE'
+                    ) {
+                        sh 'mvn clean test'
+                    }
+                }
             }
         }
+    }
 
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
+    post {
+
+        always {
+            echo '=========================================='
+            echo '       SELENIUM TESTNG TEST RESULTS'
+            echo '=========================================='
+
+            // Publish Maven Surefire/TestNG results
+            junit(
+                testResults: '**/surefire-reports/*.xml',
+                allowEmptyResults: true
+            )
+
+            // Archive TestNG/Surefire reports
+            archiveArtifacts(
+                artifacts: '**/surefire-reports/**',
+                allowEmptyArchive: true
+            )
         }
 
-        stage('Deploy') {
-            steps {
-                echo 'Deploying application...'
-            }
+        success {
+            echo '=========================================='
+            echo ' ALL SELENIUM TEST CASES PASSED'
+            echo '=========================================='
+        }
+
+        unstable {
+            echo '=========================================='
+            echo ' SOME SELENIUM TEST CASES FAILED'
+            echo ' Remaining tests were executed.'
+            echo ' Check the Jenkins Test Results for details.'
+            echo '=========================================='
+        }
+
+        failure {
+            echo '=========================================='
+            echo ' JENKINS PIPELINE FAILED'
+            echo '=========================================='
         }
     }
 }
