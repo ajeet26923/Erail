@@ -56,7 +56,7 @@ public class OrangeHRMLoginTest extends BaseTest {
     }
 
     @Test(dataProvider = "loginData",
-            description = "Use Case 2 - Data-driven valid and invalid OrangeHRM login")
+            description = "Use Case 2 - Data-driven valid and invalid OrangeHRM login",groups = {"regression"})
     public void testOrangeHrmLogin(LoginData loginData) {
         ExtentTest testNode = extentTest.createNode(
                 loginData.getTestCaseId() + " - " + loginData.getExpectedResult() + " Login");
