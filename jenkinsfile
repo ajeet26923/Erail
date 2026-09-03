@@ -14,6 +14,14 @@ pipeline {
                 )
             }
         }
+        stage('Check Versions') {
+            steps {
+                sh 'java -version'
+                sh 'mvn -version'
+                sh 'google-chrome --version || echo "Chrome not installed"'
+                sh 'chromedriver --version || echo "ChromeDriver not installed"'
+            }
+        }
 
         stage('Build') {
             steps {
