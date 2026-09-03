@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     stages {
-
         stage('Checkout') {
             steps {
                 echo 'Checking out automation code...'
@@ -17,7 +16,6 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building Maven project...'
-
                 sh 'mvn clean compile -DskipTests'
             }
         }
@@ -26,7 +24,6 @@ pipeline {
             steps {
                 script {
                     echo 'Running Selenium + Java + TestNG tests...'
-
                     catchError(
                         buildResult: 'UNSTABLE',
                         stageResult: 'FAILURE'
@@ -36,7 +33,6 @@ pipeline {
                 }
             }
         }
-
         stage('Report') {
             steps {
                 echo 'Collecting TestNG reports...'
@@ -45,12 +41,10 @@ pipeline {
                     artifacts: '**/test-output/**',
                     allowEmptyArchive: true
                 )
-
                 archiveArtifacts(
                     artifacts: '**/surefire-reports/**',
                     allowEmptyArchive: true
                 )
-
                 archiveArtifacts(
                     artifacts: '**/screenshots/**/*.png',
                     allowEmptyArchive: true
@@ -65,19 +59,22 @@ pipeline {
             echo '=========================================='
             echo '       TEST EXECUTION COMPLETED'
             echo '=========================================='
+
         }
 
         success {
             echo '=========================================='
             echo ' ALL TESTNG TESTS PASSED'
+
             echo '=========================================='
         }
 
         unstable {
             echo '=========================================='
-            echo ' SOME TESTNG TESTS FAILED'
-            echo ' REMAINING TESTS WERE EXECUTED'
-            echo ' CHECK TESTNG REPORT FOR DETAILS'
+
+            echo ' SOME SELENIUM TEST CASES FAILED'
+            echo ' Remaining tests were executed.'
+            echo ' Check the Jenkins Test Results for details.'
             echo '=========================================='
         }
 
@@ -90,5 +87,6 @@ pipeline {
         cleanup {
             cleanWs()
         }
+
     }
 }
