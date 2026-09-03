@@ -2,28 +2,93 @@ pipeline {
     agent any
 
     stages {
+
         stage('Checkout') {
             steps {
-                git branch: 'master', url: 'https://github.com/ajeet26923/Erail.git'
+                echo 'Checking out automation code...'
+
+                git(
+                    branch: 'master',
+                    url: 'https://github.com/ajeet26923/Erail.git'
+                )
             }
         }
 
         stage('Build') {
             steps {
-                sh 'mvn clean install'
+                echo 'Building Maven project...'
+
+                sh 'mvn clean compile -DskipTests'
             }
         }
 
         stage('Test') {
             steps {
-                sh 'mvn test'
+                script {
+                    echo 'Running Selenium + Java + TestNG tests...'
+
+                    catchError(
+                        buildResult: 'UNSTABLE',
+                        stageResult: 'FAILURE'
+                    ) {
+                        sh 'mvn test'
+                    }
+                }
             }
         }
 
-        stage('Deploy') {
+        stage('Report') {
             steps {
-                echo 'Deploying application...'
+                echo 'Collecting TestNG reports...'
+
+                archiveArtifacts(
+                    artifacts: '**/test-output/**',
+                    allowEmptyArchive: true
+                )
+
+                archiveArtifacts(
+                    artifacts: '**/surefire-reports/**',
+                    allowEmptyArchive: true
+                )
+
+                archiveArtifacts(
+                    artifacts: '**/screenshots/**/*.png',
+                    allowEmptyArchive: true
+                )
             }
+        }
+    }
+
+    post {
+
+        always {
+            echo '=========================================='
+            echo '       TEST EXECUTION COMPLETED'
+            echo '=========================================='
+        }
+
+        success {
+            echo '=========================================='
+            echo ' ALL TESTNG TESTS PASSED'
+            echo '=========================================='
+        }
+
+        unstable {
+            echo '=========================================='
+            echo ' SOME TESTNG TESTS FAILED'
+            echo ' REMAINING TESTS WERE EXECUTED'
+            echo ' CHECK TESTNG REPORT FOR DETAILS'
+            echo '=========================================='
+        }
+
+        failure {
+            echo '=========================================='
+            echo ' JENKINS PIPELINE FAILED'
+            echo '=========================================='
+        }
+
+        cleanup {
+            cleanWs()
         }
     }
 }
