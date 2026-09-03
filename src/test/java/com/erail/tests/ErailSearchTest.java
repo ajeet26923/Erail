@@ -1,11 +1,14 @@
 package com.erail.tests;
 
 import com.erail.base.BaseTest;
+import com.erail.base.DriverManager;
 import com.erail.support.EnvironmentManager;
+import com.erail.config.EnvironmentConfig;
 import com.erail.config.TestEnvironment;
 import com.erail.pages.erail.HomePage;
 import com.erail.utils.ConfigReader;
 import com.erail.utils.ExcelUtils;
+import com.erail.utils.ExtentReportManager;
 import com.erail.utils.JsonUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -27,7 +30,7 @@ public class ErailSearchTest extends BaseTest {
 		EnvironmentManager.setup(TestEnvironment.ERAIL);
 	}
 
-	@BeforeMethod
+	@BeforeMethod(alwaysRun=true)
 	public void openErailApplication() {
 		homePage = new HomePage(driver);
 		String baseUrl = ConfigReader.get("base.url");
@@ -35,7 +38,7 @@ public class ErailSearchTest extends BaseTest {
 		extentTest.info("Navigated to: " + baseUrl);
 	}
 
-	@Test(description = "Use Case 1 - eRail station search, Excel validation, and date selection",groups = {"sanity"})
+	@Test(description = "Use Case 1 - eRail station search, Excel validation, and date selection",groups= {"sanity"})
 	public void testErailStationSearchUseCase() throws Exception {
 		Map<String, String> dataSet = JsonUtils.readTestDataSetByCaseName(ConfigReader.get("search.testdata.file"),
 				"testErailStationSearchUseCase");
