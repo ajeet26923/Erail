@@ -35,7 +35,7 @@ public class ErailSearchTest extends BaseTest {
 		extentTest.info("Navigated to: " + baseUrl);
 	}
 
-	@Test(description = "Use Case 1 - eRail station search, Excel validation, and date selection")
+	@Test(description = "Use Case 1 - eRail station search, Excel validation, and date selection",groups = {"sanity"})
 	public void testErailStationSearchUseCase() throws Exception {
 		Map<String, String> dataSet = JsonUtils.readTestDataSetByCaseName(ConfigReader.get("search.testdata.file"),
 				"testErailStationSearchUseCase");
