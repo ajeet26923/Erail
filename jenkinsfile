@@ -2,23 +2,53 @@ pipeline {
     agent any
 
     stages {
-
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
-                checkout scm
+                echo 'Checking out automation code...'
+
+                git(
+                    branch: 'master',
+                    url: 'https://github.com/ajeet26923/Erail.git'
+                )
             }
         }
 
-        stage('Run Selenium TestNG Automation') {
+        stage('Build') {
+            steps {
+                echo 'Building Maven project...'
+                sh 'mvn clean compile -DskipTests'
+            }
+        }
+
+        stage('Test') {
             steps {
                 script {
+                    echo 'Running Selenium + Java + TestNG tests...'
                     catchError(
                         buildResult: 'UNSTABLE',
                         stageResult: 'FAILURE'
                     ) {
-                        sh 'mvn clean test'
+                        sh 'mvn test'
                     }
                 }
+            }
+        }
+        stage('Report') {
+            steps {
+                echo 'Collecting TestNG reports...'
+
+                archiveArtifacts(
+                    artifacts: '**/test-output/**',
+                    allowEmptyArchive: true
+                )
+                archiveArtifacts(
+                    artifacts: '**/surefire-reports/**',
+                    allowEmptyArchive: true
+                )
+                archiveArtifacts(
+                    artifacts: '**/screenshots/**/*.png',
+                    allowEmptyArchive: true
+                )
             }
         }
     }
@@ -27,30 +57,21 @@ pipeline {
 
         always {
             echo '=========================================='
-            echo '       SELENIUM TESTNG TEST RESULTS'
+            echo '       TEST EXECUTION COMPLETED'
             echo '=========================================='
 
-            // Publish Maven Surefire/TestNG results
-            junit(
-                testResults: '**/surefire-reports/*.xml',
-                allowEmptyResults: true
-            )
-
-            // Archive TestNG/Surefire reports
-            archiveArtifacts(
-                artifacts: '**/surefire-reports/**',
-                allowEmptyArchive: true
-            )
         }
 
         success {
             echo '=========================================='
-            echo ' ALL SELENIUM TEST CASES PASSED'
+            echo ' ALL TESTNG TESTS PASSED'
+
             echo '=========================================='
         }
 
         unstable {
             echo '=========================================='
+
             echo ' SOME SELENIUM TEST CASES FAILED'
             echo ' Remaining tests were executed.'
             echo ' Check the Jenkins Test Results for details.'
@@ -62,5 +83,10 @@ pipeline {
             echo ' JENKINS PIPELINE FAILED'
             echo '=========================================='
         }
+
+        cleanup {
+            cleanWs()
+        }
+
     }
 }
