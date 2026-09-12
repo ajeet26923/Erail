@@ -43,28 +43,15 @@ public final class DriverManager {
 		default:
 			WebDriverManager.chromedriver().setup();
 			ChromeOptions options = new ChromeOptions();
-//              //options.addArguments("--disable-notifications");
-//              //options.addArguments("--deny-permission-prompts");
+			// options.addArguments("--disable-notifications");
+			// options.addArguments("--deny-permission-prompts");
 			// options.addArguments("--start-maximized");
-//                options.addArguments("--headless=new");
-//                options.addArguments("--no-sandbox");
-//                options.addArguments("--disable-dev-shm-usage");
-//                options.addArguments("--window-size=1920,1080");
-//                options.addArguments("--disable-notifications");
-//                options.addArguments("--deny-permission-prompts");
-
-			boolean isCloud = System.getenv("CLOUD_ENV") != null;
-
-			if (isCloud) {
-				options.addArguments("--headless=new");
-				options.addArguments("--no-sandbox");
-				options.addArguments("--disable-dev-shm-usage");
-			} else {
-				//options.setHeadless(false);
-				options.addArguments("--start-maximized");
-			}
-
-			driver = new ChromeDriver(options);
+			options.addArguments("--headless=new");
+			options.addArguments("--no-sandbox");
+			options.addArguments("--disable-dev-shm-usage");
+			options.addArguments("--window-size=1920,1080");
+			options.addArguments("--disable-notifications");
+			options.addArguments("--deny-permission-prompts");
 
 			Map<String, Object> prefs = new HashMap<>();
 			prefs.put("profile.default_content_setting_values.geolocation", 2);
@@ -81,7 +68,6 @@ public final class DriverManager {
 
 	public static void quitDriver() {
 		WebDriver driver = DRIVER.get();
-		System.out.println(driver);
 		if (driver != null) {
 			driver.quit();
 			DRIVER.remove();
